@@ -15,18 +15,16 @@ export class UsersService {
     const createUser = await this.prisma.user.create({
       data,
     });
-    console.log(createUser)
     return createUser;
   }
 
   async findAll() {
-    this.logger.log('getAllUsers');
+    this.logger.log('getAllUsers->>');
     const users = await this.prisma.user.findMany();
     return  users;
   }
 
   async findOne(name: string, password: string) {
-    console.log("finone->>")
     this.logger.log('findOne->>');
     const users = await this.prisma.user.findFirst({
       where: { name: name, password: password }
@@ -34,11 +32,24 @@ export class UsersService {
     return  users;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: Prisma.UserCreateInput) {
+    this.logger.log('updateUser');
+    const updateUser = await this.prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {...updateUserDto},
+    });
+    return updateUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async delete(id: number) {
+    this.logger.log('deleteUser');
+    const deleteUser = await this.prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
+    return deleteUser;
   }
 }
